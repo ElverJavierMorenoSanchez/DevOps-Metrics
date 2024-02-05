@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model DevOpsData {
+  //id                      String    @id @default(auto()) @map("_id") @db.ObjectId
+  id                      Int       @id @default(autoincrement())
+  tipoMedicion            String
+  pais                    String
+  mes                     Int       @default(1)
+  anio                    Int       @default(2024)
+  nombreItemMedir         String
+  valorMedicion           Float?    @default(0)
+  valorMeta               Float?    @default(0)
+  avanceReal              Int?      @default(0)
+  avanceEstimado          Int?      @default(0)
+  valorMedicionPorcentual Float?    @default(0)
+  createdAt               DateTime? @default(now())
+  updatedAt               DateTime?
+}
