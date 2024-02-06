@@ -1,5 +1,5 @@
+import pool from "@/libs/DBConnect";
 import { NextResponse } from "next/server";
-import prisma from "@/libs/PrismaConnect";
 
 export async function PUT(req, { params }) {
   try {
@@ -11,17 +11,37 @@ export async function PUT(req, { params }) {
     const newMetric = {
       pais,
       mes: parseInt(mes),
-      valorMedicion: parseFloat(body[keys[2]]),
-      valorMeta: parseFloat(body[keys[3]]),
-      avanceReal: parseFloat(body[keys[4]]),
-      avanceEstimado: parseFloat(body[keys[5]]),
+      valor_medicion: parseFloat(body[keys[2]]),
+      valor_meta: parseFloat(body[keys[3]]),
+      avance_real: parseFloat(body[keys[4]]),
+      avance_estimado: parseFloat(body[keys[5]]),
     };
 
-    const _metric = await prisma.devOpsData.update({
-      where: { id: parseInt(id) },
-      data: newMetric,
-    });
+    const result = await pool.query(
+      `
+      UPDATE devOpsData
+      SET
+        pais = $1,
+        mes = $2,
+        valor_medicion = $3,
+        valor_meta = $4,
+        avance_real = $5,
+        avance_estimado = $6
+      WHERE id = $7
+      RETURNING *
+    `,
+      [
+        newMetric.pais,
+        newMetric.mes,
+        newMetric.valor_medicion,
+        newMetric.valor_meta,
+        newMetric.avance_real,
+        newMetric.avance_estimado,
+        parseInt(id),
+      ]
+    );
 
+    const _metric = result.rows[0];
     return NextResponse.json(_metric);
   } catch (error) {
     console.log("🚀 ~ POST ~ error:", error);

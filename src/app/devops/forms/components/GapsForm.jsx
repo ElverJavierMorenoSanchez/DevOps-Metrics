@@ -17,6 +17,7 @@ const GapsForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
   const [pais, setPais] = useState("");
@@ -55,9 +56,9 @@ const GapsForm = () => {
         ...data,
       });
 
-      console.log(response);
       getData(mes, pais);
       toast.success("Guardado exitoso");
+      reset();
     } catch (error) {
       console.log("🚀 ~ onSubmit ~ error:", error);
       toast.error(error.response.data.message);

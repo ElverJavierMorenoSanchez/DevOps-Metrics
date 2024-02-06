@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/libs/PrismaConnect";
+import pool from "@/libs/DBConnect";
 
 export async function POST(req) {
   try {
@@ -7,8 +7,18 @@ export async function POST(req) {
     const { leadTime, mes, pais, valorMedicion, valorMedicionPorcentual } =
       body;
 
-    const metrics = await getMetrics(pais, mes);
-    if (metrics.length > 0) {
+    const result = await pool.query(
+      `
+      SELECT *
+      FROM devOpsData
+      WHERE tipo_medicion = 'Desempeño DEVOPS'
+        AND mes = $1
+        AND pais = $2
+    `,
+      [parseInt(mes), pais]
+    );
+
+    if (result.rows.length > 0) {
       return NextResponse.json(
         { message: "Ya existe una métrica para este mes y país" },
         { status: 302 }
@@ -16,41 +26,79 @@ export async function POST(req) {
     }
 
     const newMetric = {
-      tipoMedicion: "Desempeño DEVOPS",
+      tipo_medicion: "Desempeño DEVOPS",
       pais,
       mes: parseInt(mes),
-      nombreItemMedir: "Cantidad de Despliegues",
-      valorMedicion: parseFloat(valorMedicion),
+      nombre_item_medir: "Cantidad de Despliegues",
+      valor_medicion: parseFloat(valorMedicion),
     };
 
-    const newMetrics = await prisma.$transaction([
-      prisma.devOpsData.create({ data: { ...newMetric } }),
-      prisma.devOpsData.create({
-        data: {
-          ...newMetric,
-          nombreItemMedir: "Lead Time DevOps",
-          valorMedicion: parseFloat(leadTime),
-        },
-      }),
-      prisma.devOpsData.create({
-        data: {
-          ...newMetric,
-          nombreItemMedir: "Tasa de Éxito",
-          valorMedicion: 0,
-          valorMedicionPorcentual: parseFloat(valorMedicionPorcentual),
-        },
-      }),
-      prisma.devOpsData.create({
-        data: {
-          ...newMetric,
-          nombreItemMedir: "Frecuencia de Liberación",
-          valorMedicion: parseFloat(valorMedicion) / 30,
-        },
-      }),
-    ]);
+    // Crear nuevas métricas utilizando una transacción
+    await pool.query("BEGIN");
 
-    return NextResponse.json(newMetrics);
+    await pool.query(
+      `
+        INSERT INTO devOpsData (tipo_medicion, pais, mes, nombre_item_medir, valor_medicion)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING *
+      `,
+      [
+        newMetric.tipo_medicion,
+        newMetric.pais,
+        newMetric.mes,
+        newMetric.nombre_item_medir,
+        newMetric.valor_medicion,
+      ]
+    );
+    await pool.query(
+      `
+        INSERT INTO devOpsData (tipo_medicion, pais, mes, nombre_item_medir, valor_medicion)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING *
+      `,
+      [
+        newMetric.tipo_medicion,
+        newMetric.pais,
+        newMetric.mes,
+        "Lead Time DevOps",
+        parseFloat(leadTime),
+      ]
+    );
+    await pool.query(
+      `
+        INSERT INTO devOpsData (tipo_medicion, pais, mes, nombre_item_medir, valor_medicion, valor_medicion_porcentual)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING *
+      `,
+      [
+        newMetric.tipo_medicion,
+        newMetric.pais,
+        newMetric.mes,
+        "Tasa de Éxito",
+        0,
+        parseFloat(valorMedicionPorcentual),
+      ]
+    );
+    await pool.query(
+      `
+        INSERT INTO devOpsData (tipo_medicion, pais, mes, nombre_item_medir, valor_medicion)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING *
+      `,
+      [
+        newMetric.tipo_medicion,
+        newMetric.pais,
+        newMetric.mes,
+        "Frecuencia de Liberación",
+        parseFloat(valorMedicion) / 30,
+      ]
+    );
+
+    await pool.query("COMMIT");
+
+    return NextResponse.json({ message: "Métricas creadas" }, { status: 201 });
   } catch (error) {
+    await pool.query("ROLLBACK");
     console.log("Error creating metrics", error);
     return NextResponse.json(
       { error: "Error creating metrics" },
@@ -58,7 +106,6 @@ export async function POST(req) {
     );
   }
 }
-
 export async function GET(req) {
   try {
     const url = new URL(req.url);
@@ -79,17 +126,22 @@ export async function GET(req) {
 }
 
 const getMetrics = async (pais, mes) => {
-  const metrics = await prisma.devOpsData.findMany({
-    where: {
-      AND: [
-        { tipoMedicion: { equals: "Desempeño DEVOPS" } },
-        { mes: { equals: Number(mes) } },
-        { pais: { equals: pais } },
-      ],
-    },
-    take: 8,
-    orderBy: [{ anio: "desc" }, { mes: "desc" }],
-  });
+  try {
+    const result = await pool.query(
+      `
+      SELECT *
+      FROM devOpsData
+      WHERE tipo_medicion = 'Desempeño DEVOPS'
+        AND mes = $1
+        AND pais = $2
+      ORDER BY id ASC
+    `,
+      [Number(mes), pais]
+    );
 
-  return metrics;
+    return result.rows;
+  } catch (error) {
+    console.log("🚀 ~ getMetrics ~ error:", error);
+    return [];
+  }
 };

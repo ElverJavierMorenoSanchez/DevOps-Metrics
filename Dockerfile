@@ -1,6 +1,5 @@
 FROM node:18-alpine AS base
 
-ENV DATABASE_URL postgresql://USER:PASSWORD@HOST:PORT/DATABASE
 ENV NEXT_SHARP_PATH /tmp/node_modules/sharp
 
 FROM base AS deps
@@ -12,9 +11,6 @@ WORKDIR /app
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
 RUN npm ci
-
-COPY prisma  ./prisma
-RUN npx prisma migrate dev --name init --preview-feature
 
 # Rebuild the source code only when needed
 FROM base AS builder

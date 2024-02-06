@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/libs/PrismaConnect";
+import pool from "@/libs/DBConnect";
 
 export async function PUT(req, { params }) {
   try {
@@ -17,32 +17,50 @@ export async function PUT(req, { params }) {
     const newMetric = {
       pais,
       mes: parseInt(mes),
-      valorMedicion:
+      valor_medicion:
         nombreItemMedir === "Cantidad de Despliegues"
           ? parseFloat(valorMedicion)
           : parseFloat(leadTime),
-      valorMedicionPorcentual: parseFloat(valorMedicionPorcentual),
+      valor_medicion_porcentual: parseFloat(valorMedicionPorcentual),
     };
 
-    const newMetrics = await prisma.devOpsData.update({
-      where: {
+    const result = await pool.query(
+      `
+      UPDATE devOpsData
+      SET
+        pais = $1,
+        mes = $2,
+        valor_medicion = $3,
+        valor_medicion_porcentual = $4
+      WHERE id = $5
+      RETURNING *
+    `,
+      [
+        newMetric.pais,
+        newMetric.mes,
+        newMetric.valor_medicion,
+        newMetric.valor_medicion_porcentual,
         id,
-      },
-      data: {
-        ...newMetric,
-      },
-    });
+      ]
+    );
+
+    const newMetrics = result.rows[0];
 
     if (nombreItemMedir === "Cantidad de Despliegues") {
-      const newMetrics = await prisma.devOpsData.update({
-        where: {
-          id: id + 3,
-        },
-        data: {
-          ...newMetric,
-          valorMedicion: parseFloat(valorMedicion) / 30,
-        },
-      });
+      const result = await pool.query(
+        `
+        UPDATE devOpsData
+        SET
+          pais = $1,
+          mes = $2,
+          valor_medicion = $3
+        WHERE id = $4
+        RETURNING *
+      `,
+        [newMetric.pais, newMetric.mes, newMetric.valor_medicion / 30, id + 3]
+      );
+
+      newMetrics.secondaryMetric = result.rows[0];
     }
 
     return NextResponse.json(newMetrics);

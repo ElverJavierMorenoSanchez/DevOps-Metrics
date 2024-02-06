@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { countries, months } from "@/helpers/AditionalData";
 
 const ModalFormDora = ({ metric, getData }) => {
-  const { id, valorMedicion, valorMedicionPorcentual, nombreItemMedir } =
+  const { id, valor_medicion, valor_medicion_porcentual, nombre_item_medir } =
     metric;
 
   const {
@@ -19,9 +19,9 @@ const ModalFormDora = ({ metric, getData }) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      valorMedicion,
-      valorMedicionPorcentual,
-      leadTime: valorMedicion,
+      valorMedicion: valor_medicion,
+      valorMedicionPorcentual: valor_medicion_porcentual,
+      leadTime: valor_medicion,
     },
   });
 
@@ -40,7 +40,7 @@ const ModalFormDora = ({ metric, getData }) => {
       const response = await axios.put(`/api/doraMetrics/${id}`, {
         pais,
         mes,
-        nombreItemMedir,
+        nombreItemMedir: nombre_item_medir,
         ...data,
       });
 
@@ -80,7 +80,7 @@ const ModalFormDora = ({ metric, getData }) => {
           defaultValue={mes}
           disabled={true}
         />
-        {nombreItemMedir === "Cantidad de Despliegues" && (
+        {nombre_item_medir === "Cantidad de Despliegues" && (
           <InputForm
             id="valorMedicion"
             label={"Cant. Despliegues:"}
@@ -90,7 +90,7 @@ const ModalFormDora = ({ metric, getData }) => {
           />
         )}
 
-        {nombreItemMedir === "Lead Time DevOps" && (
+        {nombre_item_medir === "Lead Time DevOps" && (
           <InputForm
             id="leadTime"
             label={"Lead Time:"}
@@ -100,7 +100,7 @@ const ModalFormDora = ({ metric, getData }) => {
           />
         )}
 
-        {nombreItemMedir === "Tasa de Éxito" && (
+        {nombre_item_medir === "Tasa de Éxito" && (
           <InputForm
             id="valorMedicionPorcentual"
             label={"Tasa De Éxito:"}

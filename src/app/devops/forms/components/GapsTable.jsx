@@ -8,15 +8,15 @@ const GapsTable = ({ data, getData }) => {
   const columns = [
     { accessorKey: "pais", header: "País" },
     { accessorKey: "mes", header: "Mes" },
-    { accessorKey: "nombreItemMedir", header: "Item" },
-    { accessorKey: "valorMedicion", header: "Valor Medición" },
-    { accessorKey: "valorMeta", header: "Valor Meta" },
+    { accessorKey: "nombre_item_medir", header: "Item" },
+    { accessorKey: "valor_medicion", header: "Valor Medición" },
+    { accessorKey: "valor_meta", header: "Valor Meta" },
     {
-      accessorKey: "avanceReal",
+      accessorKey: "avance_real",
       header: "%avance Real del plan de desarrolloValor Medición",
     },
     {
-      accessorKey: "avanceEstimado",
+      accessorKey: "avance_estimado",
       header: "%avance Estimado del plan de desarrollo",
     },
 
@@ -24,7 +24,7 @@ const GapsTable = ({ data, getData }) => {
       accessorKey: "",
       header: "Opciones",
       cell: (row) => {
-        if (row?.row?.original.nombreItemMedir === "Frecuencia de Liberación")
+        if (row?.row?.original.nombre_item_medir === "Frecuencia de Liberación")
           return <></>;
 
         return (

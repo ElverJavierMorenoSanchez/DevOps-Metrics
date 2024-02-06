@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import prisma from "@/libs/PrismaConnect";
 import { gapsMetrics } from "@/helpers/AditionalData";
+import pool from "@/libs/DBConnect";
 
 export async function POST(req) {
   try {
@@ -16,21 +16,38 @@ export async function POST(req) {
         { status: 302 }
       );
 
-    gapsMetrics.map(async (metric) => {
+    for (const metric of gapsMetrics) {
       const newMetric = {
-        tipoMedicion: "Madurez DevOps",
+        tipo_medicion: "Madurez DevOps",
         pais,
         mes: parseInt(mes),
-        nombreItemMedir: metric.nombreItem,
-        valorMedicion: parseFloat(body[`${metric.nomVariable}1`]) || 0,
-        valorMeta: parseFloat(body[`${metric.nomVariable}2`]) || 0,
-        avanceReal: parseFloat(body[`${metric.nomVariable}3`]) || 0,
-        avanceEstimado: parseFloat(body[`${metric.nomVariable}4`]) || 0,
+        nombre_item_medir: metric.nombreItem,
+        valor_medicion: parseFloat(body[`${metric.nomVariable}1`]) || 0,
+        valor_meta: parseFloat(body[`${metric.nomVariable}2`]) || 0,
+        avance_real: parseFloat(body[`${metric.nomVariable}3`]) || 0,
+        avance_estimado: parseFloat(body[`${metric.nomVariable}4`]) || 0,
       };
 
-      const _metric = await prisma.devOpsData.create({ data: newMetric });
-      newMetrics.push(_metric);
-    });
+      const result = await pool.query(
+        `
+        INSERT INTO devOpsData (tipo_medicion, pais, mes, nombre_item_medir, valor_medicion, valor_meta, avance_real, avance_estimado)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING *
+      `,
+        [
+          newMetric.tipo_medicion,
+          newMetric.pais,
+          newMetric.mes,
+          newMetric.nombre_item_medir,
+          newMetric.valor_medicion,
+          newMetric.valor_meta,
+          newMetric.avance_real,
+          newMetric.avance_estimado,
+        ]
+      );
+
+      newMetrics.push(result.rows[0]);
+    }
 
     return NextResponse.json(newMetrics);
   } catch (error) {
@@ -42,7 +59,6 @@ export async function POST(req) {
 export async function GET(req) {
   try {
     const url = new URL(req.url);
-    console.log(url);
 
     const mes = url.searchParams.get("mes");
     const pais = url.searchParams.get("pais");
@@ -50,22 +66,24 @@ export async function GET(req) {
     const gaps = await searhMetrics(pais, mes);
     return NextResponse.json(gaps);
   } catch (error) {
+    console.log("🚀 ~ GET ~ error:", error);
     return NextResponse.json([]);
   }
 }
 
 const searhMetrics = async (pais, mes) => {
-  const gaps = await prisma.devOpsData.findMany({
-    where: {
-      AND: [
-        { tipoMedicion: { equals: "Madurez DevOps" } },
-        { mes: { equals: Number(mes) } },
-        { pais: { equals: pais } },
-      ],
-    },
-    take: 10,
-    orderBy: [{ anio: "desc" }, { mes: "desc" }],
-  });
+  const result = await pool.query(
+    `
+    SELECT *
+    FROM devOpsData
+    WHERE tipo_medicion = 'Madurez DevOps'
+      AND mes = $1
+      AND pais = $2
+    ORDER BY id ASC
+    LIMIT 10
+  `,
+    [Number(mes), pais]
+  );
 
-  return gaps;
+  return result.rows;
 };

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/libs/PrismaConnect";
+import pool from "@/libs/DBConnect";
 
 export async function POST() {
   try {
@@ -11,15 +11,8 @@ export async function POST() {
 
 export async function GET(req, res) {
   try {
-    const url = new URL(req.url);
-    const all = url.searchParams.get("all");
-
-    if (all === "true") {
-      const data = await searhMetrics();
-      return NextResponse.json(data);
-    }
-
-    return NextResponse.json({ he: "jasd" });
+    const data = await searhMetrics();
+    return NextResponse.json(data);
   } catch (error) {
     console.log(error);
     return NextResponse.json({
@@ -29,9 +22,7 @@ export async function GET(req, res) {
 }
 
 const searhMetrics = async () => {
-  const data = await prisma.devOpsData.findMany({
-    orderBy: [{ anio: "desc" }, { mes: "desc" }],
-  });
+  const data = await pool.query("SELECT * FROM DevOpsData");
 
-  return data;
+  return data.rows;
 };

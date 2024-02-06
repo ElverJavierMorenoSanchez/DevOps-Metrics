@@ -8,17 +8,17 @@ const DoraTable = ({ data, getData }) => {
   const columns = [
     { accessorKey: "pais", header: "País" },
     { accessorKey: "mes", header: "Mes" },
-    { accessorKey: "nombreItemMedir", header: "Item" },
-    { accessorKey: "valorMedicion", header: "Valor Medición" },
+    { accessorKey: "nombre_item_medir", header: "Item" },
+    { accessorKey: "valor_medicion", header: "Valor Medición" },
     {
-      accessorKey: "valorMedicionPorcentual",
+      accessorKey: "valor_medicion_porcentual",
       header: "Valor Medicion %",
     },
     {
       accessorKey: "id",
       header: "Opciones",
       cell: (row) => {
-        if (row?.row?.original.nombreItemMedir === "Frecuencia de Liberación")
+        if (row?.row?.original.nombre_item_medir === "Frecuencia de Liberación")
           return <></>;
 
         return (
