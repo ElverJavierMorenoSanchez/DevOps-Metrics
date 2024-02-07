@@ -1,6 +1,7 @@
 FROM node:18-alpine AS base
 
 ENV NEXT_SHARP_PATH /tmp/node_modules/sharp
+ENV DATABASE_URL postgresql://user:password@0.0.0.0:5432/database
 
 FROM base AS deps
 

@@ -5,7 +5,7 @@ const InputForm = ({ id, placeholder, label, register, erros }) => {
     <div className="flex flex-row items-center gap-3">
       <label
         forhtml={id}
-        className="flex items-center justify-end w-40 h-full text-end text-md font-semibold text-gray-900 dark:text-white"
+        className="flex items-center justify-end w-40 h-full text-end text-md font-semibold text-gray-900 "
       >
         {label}
       </label>

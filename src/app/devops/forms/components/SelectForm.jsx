@@ -10,14 +10,14 @@ const SelectForm = ({
     <div className="flex flex-row items-center gap-3">
       <label
         forhtml={title}
-        className="flex items-center justify-end w-40 h-full text-end text-md font-semibold text-gray-900 dark:text-white"
+        className="flex items-center justify-end w-40 h-full text-end text-md font-semibold text-gray-900 "
       >
         {label}
       </label>
       <select
         id={title}
         onChange={onChange}
-        className="w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        className="w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
         value={defaultValue}
         disabled={disabled}
       >
