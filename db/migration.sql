@@ -14,20 +14,23 @@ CREATE TABLE devopsdata (
     "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
 );
 
+drop table user_hispam;
+drop table account;
 
-CREATE TABLE user (
+CREATE TABLE user_hispam (
   "id" VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
-  "name" VARCHAR,
+  "user_name" VARCHAR,
   "pais" VARCHAR,
   "email" VARCHAR UNIQUE,
   "emailVerified" TIMESTAMP,
+  "rol" VARCHAR,
   "image" VARCHAR,
   "hashedPassword" VARCHAR
 );
 
 CREATE TABLE account (
   "id" VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
-  "userId" VARCHAR REFERENCES "User"(id) ON DELETE CASCADE,
+  "userId" VARCHAR REFERENCES "user_hispam"(id) ON DELETE CASCADE,
   "type" VARCHAR,
   "provider" VARCHAR,
   "providerAccountId" VARCHAR,
@@ -43,4 +46,6 @@ CREATE TABLE account (
 
 -- Permissions
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE devopsdata TO doraowner;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE user_hispam TO doraowner;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE account TO doraowner;
 GRANT USAGE, SELECT, UPDATE ON SEQUENCE devopsdata_id_seq TO doraowner;

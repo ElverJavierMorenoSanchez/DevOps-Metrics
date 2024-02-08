@@ -3,8 +3,11 @@ import Link from "next/link";
 import { FaWpforms, FaChartBar } from "react-icons/fa6";
 import { MdOutlineSettings } from "react-icons/md";
 import AsideButton from "./AsideButton";
+import { getCurrentUser } from "@/actions/getCurrentUser";
 
-const Aside = () => {
+const Aside = async () => {
+  const user = await getCurrentUser();
+
   return (
     <aside
       id="sidebar"
@@ -24,9 +27,11 @@ const Aside = () => {
         </nav>
       </div>
 
-      <div className="flex justify-center py-5 border-t border-gray-600">
-        <AsideButton href={"#"} icon={MdOutlineSettings} />
-      </div>
+      {user?.rol === "administrador" && (
+        <div className="flex justify-center py-5 border-t border-gray-600">
+          <AsideButton href={"/settings"} icon={MdOutlineSettings} />
+        </div>
+      )}
     </aside>
   );
 };

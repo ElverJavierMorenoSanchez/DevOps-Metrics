@@ -62,7 +62,7 @@ const DoraForm = () => {
   return (
     <>
       <form
-        className=" w-1/2 flex flex-col gap-2"
+        className=" w-full flex flex-col gap-2"
         onSubmit={handleSubmit(onSubmit)}
       >
         <SelectForm

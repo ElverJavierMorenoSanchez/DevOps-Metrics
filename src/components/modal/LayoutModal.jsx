@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
+import Button from "../Button";
 
 const customStyles = {
   content: {
@@ -14,7 +15,7 @@ const customStyles = {
   },
 };
 
-const LayoutModal = ({ children, button: IconButton, icon }) => {
+const LayoutModal = ({ children, button: IconButton, icon, label }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   function openModal() {
@@ -27,7 +28,11 @@ const LayoutModal = ({ children, button: IconButton, icon }) => {
 
   return (
     <div className={"w-1/2"}>
-      <IconButton icon={icon} onClick={openModal} />
+      {label ? (
+        <Button onClick={openModal}>{label}</Button>
+      ) : (
+        <IconButton icon={icon} onClick={openModal} />
+      )}
       <Modal
         isOpen={isOpen}
         onRequestClose={closeModal}

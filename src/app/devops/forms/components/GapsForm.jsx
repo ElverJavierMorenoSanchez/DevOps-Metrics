@@ -31,7 +31,6 @@ const GapsForm = () => {
 
   const getData = async (_mes, _pais) => {
     const _data = await getGapsMetrics(_mes, _pais);
-    console.log("🚀 ~ getData ~ _data:", _data);
     setData(_data);
   };
 
@@ -44,7 +43,6 @@ const GapsForm = () => {
   const handleChange = () => {
     setChecked(!checked);
     getData(mes, pais);
-    console.log("🚀 ~ handleChange ~ checked:", checked);
   };
 
   const onSubmit = async (data) => {
@@ -66,7 +64,7 @@ const GapsForm = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="w-full flex flex-col gap-4">
       <form
         className="w-full flex flex-col gap-2"
         onSubmit={handleSubmit(onSubmit)}

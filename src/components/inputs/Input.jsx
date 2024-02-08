@@ -2,9 +2,16 @@
 
 import clsx from "clsx";
 
-import { FieldValues, FieldErrors, UseFormRegister } from "react-hook-form";
-
-const Input = ({ label, id, type, errors, register, disabled, required }) => {
+const Input = ({
+  label,
+  id,
+  type,
+  errors,
+  register,
+  disabled,
+  required,
+  value,
+}) => {
   return (
     <div className="">
       <label
@@ -25,6 +32,7 @@ const Input = ({ label, id, type, errors, register, disabled, required }) => {
             errors[id] && "focus:ring-rose-500",
             disabled && "opacity-50 cursor-default"
           )}
+          defaultValue={value}
         />
       </div>
     </div>

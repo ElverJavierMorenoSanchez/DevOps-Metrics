@@ -9,7 +9,6 @@ import { countries, months } from "@/helpers/AditionalData";
 import toast from "react-hot-toast";
 
 const ModalFormGaps = ({ metric, getData }) => {
-  console.log(metric);
   const {
     register,
     handleSubmit,
@@ -37,7 +36,6 @@ const ModalFormGaps = ({ metric, getData }) => {
   };
 
   const onSubmit = async (data) => {
-    console.log("🚀 ~ onSubmit ~ data:", data);
     try {
       const response = await axios.put(`/api/gapMetrics/${id}`, {
         pais,

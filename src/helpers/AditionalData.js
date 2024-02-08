@@ -1,3 +1,8 @@
+export const rols = [
+  { title: "Administrador", value: "administrador" },
+  { title: "Usuario", value: "usuario" },
+];
+
 export const countries = [
   { title: "Argentina", value: "Argentina" },
   { title: "Chile", value: "Chile" },

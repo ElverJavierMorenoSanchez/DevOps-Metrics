@@ -13,9 +13,9 @@ const TableLayout = ({ columns, data }) => {
     getCoreRowModel: getCoreRowModel(),
   });
   return (
-    <div className="">
+    <div className="w-full">
       <div className="overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 rounded-lg">
+        <table className="w-full min-w-full divide-y divide-gray-200 dark:divide-gray-700 rounded-lg">
           <thead className="bg-gray-500 dark:bg-gray-700 ">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
