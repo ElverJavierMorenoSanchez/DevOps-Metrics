@@ -16,10 +16,10 @@ export async function PUT(req, { params }) {
       const query = `
       UPDATE "user_hispam" 
       SET 
-        "email" = $1
-        "user_name" = $2
-        "password" = $3
-        "rol" = $4
+        "email" = $1,
+        "user_name" = $2,
+        "hashedPassword" = $3,
+        "rol" = $4,
         "pais" = $5
       WHERE "id" = $6;
     `;

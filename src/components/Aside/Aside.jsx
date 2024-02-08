@@ -37,3 +37,4 @@ const Aside = async () => {
 };
 
 export default Aside;
+export const dynamic = "force-dynamic";

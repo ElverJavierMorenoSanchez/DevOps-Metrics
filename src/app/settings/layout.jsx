@@ -13,3 +13,4 @@ const SettingLayout = async ({ children }) => {
 };
 
 export default SettingLayout;
+export const dynamic = "force-dynamic";

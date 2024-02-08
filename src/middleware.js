@@ -6,4 +6,4 @@ export default withAuth({
   },
 });
 
-export const config = { matcher: ["/devops/forms/:path*"] };
+export const config = { matcher: ["/devops/forms/:path*", "/settings/:path*"] };
