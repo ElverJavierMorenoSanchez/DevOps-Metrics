@@ -1,11 +1,11 @@
 import TableLayout from "@/components/table/TableLayout";
-import { MdEdit } from "react-icons/md";
+import { MdEdit, MdDelete } from "react-icons/md";
 import LayoutModal from "@/components/modal/LayoutModal";
 import IconButton from "@/app/devops/forms/components/IconButton";
 import ModalFormUser from "./ModalFormUser";
 import Button from "./Button";
 
-const UserTable = ({ data, getData }) => {
+const UserTable = ({ data, getData, handleDelete }) => {
   const columns = [
     { accessorKey: "user_name", header: "Nombre" },
     { accessorKey: "email", header: "Correo" },
@@ -16,13 +16,20 @@ const UserTable = ({ data, getData }) => {
       header: "Opciones",
       cell: (row) => {
         return (
-          <LayoutModal button={IconButton} icon={MdEdit}>
-            <ModalFormUser
-              user={row?.row?.original}
-              getData={getData}
-              type={"update"}
+          <div className="w-full flex flex-row justify-center items-center gap-4">
+            <LayoutModal button={IconButton} icon={MdEdit}>
+              <ModalFormUser
+                user={row?.row?.original}
+                getData={getData}
+                type={"update"}
+              />
+            </LayoutModal>
+            <IconButton
+              icon={MdDelete}
+              danger={true}
+              onClick={() => handleDelete(row?.row?.original?.id)}
             />
-          </LayoutModal>
+          </div>
         );
       },
     },

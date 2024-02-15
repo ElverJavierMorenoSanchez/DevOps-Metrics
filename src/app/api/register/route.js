@@ -4,6 +4,11 @@ import { NextResponse } from "next/server";
 
 export async function GET(req) {
   try {
+    const { _parsed } = req.cookies;
+    const token = _parsed.get("next-auth.session-token");
+
+    if (!token) return NextResponse.json({ message: "Unauthorized" });
+
     const query = `
       SELECT id, user_name, email, pais, rol FROM "user_hispam"
     `;
@@ -18,6 +23,11 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
+    const { _parsed } = req.cookies;
+    const token = _parsed.get("next-auth.session-token");
+
+    if (!token) return NextResponse.json({ message: "Unauthorized" });
+
     const { email, user_name, password, rol, pais } = await req.json();
 
     if (!email || !user_name || !password)
@@ -28,7 +38,7 @@ export async function POST(req) {
     const query = `
       INSERT INTO "user_hispam" ("email", "user_name", "hashedPassword", "pais", "rol")
       VALUES ($1, $2, $3, $4, $5)
-      RETURNING *;
+      ;
     `;
 
     const values = [email, user_name, hashedPassword, pais, rol];
@@ -38,6 +48,11 @@ export async function POST(req) {
     return NextResponse.json(result);
   } catch (error) {
     console.log(error, "REGISTRATION ERROR");
+
+    if (error.code === "23505") {
+      return new NextResponse("El usuario ya existe", { status: 301 });
+    }
+
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

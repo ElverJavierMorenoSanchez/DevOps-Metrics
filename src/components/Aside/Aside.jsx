@@ -11,7 +11,7 @@ const Aside = async () => {
   return (
     <aside
       id="sidebar"
-      className="sticky inset-y-0 left-0 z-30 flex flex-col w-[4.5rem] min-h-screen space-y-6 overflow-y-auto text-gray-100 transition duration-200 transform bg-gray-800 lg:translate-x-0 lg:relative lg:inset-0"
+      className="absolute inset-y-0 left-0 z-30 flex flex-col w-[4.5rem] min-h-screen space-y-6 overflow-y-auto text-gray-100 transition duration-200 transform bg-gray-800 lg:translate-x-0 lg:relative lg:inset-0"
     >
       <div className="flex flex-col items-center flex-1 space-y-6">
         <Link

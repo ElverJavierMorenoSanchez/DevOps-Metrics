@@ -120,8 +120,8 @@ const AuthForm = () => {
           )}
           <Input
             id="email"
-            label="Correo electronico"
-            type="email"
+            label="Usuario"
+            type="text"
             register={register}
             errors={errors}
             disabled={isLoading}

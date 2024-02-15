@@ -4,6 +4,11 @@ import { NextResponse } from "next/server";
 
 export async function PUT(req, { params }) {
   try {
+    const { _parsed } = req.cookies;
+    const token = _parsed.get("next-auth.session-token");
+
+    if (!token) return NextResponse.json({ message: "Unauthorized" });
+
     const { id } = params;
     const { email, user_name, password, rol, pais } = await req.json();
 
@@ -41,6 +46,29 @@ export async function PUT(req, { params }) {
 
     const values = [email, user_name, rol, pais, id];
     const result = await pool.query(query, values);
+
+    return NextResponse.json(result);
+  } catch (error) {
+    console.log(error, "REGISTRATION ERROR");
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
+
+export async function DELETE(req, { params }) {
+  try {
+    const { _parsed } = req.cookies;
+    const token = _parsed.get("next-auth.session-token");
+
+    if (!token) return NextResponse.json({ message: "Unauthorized" });
+
+    const { id } = params;
+
+    const query = `
+      DELETE FROM user_hispam
+      WHERE "id" = $1;
+    `;
+
+    const result = await pool.query(query, [id]);
 
     return NextResponse.json(result);
   } catch (error) {

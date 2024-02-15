@@ -27,7 +27,7 @@ const LayoutModal = ({ children, button: IconButton, icon, label }) => {
   }
 
   return (
-    <div className={"w-1/2"}>
+    <div className={""}>
       {label ? (
         <Button onClick={openModal}>{label}</Button>
       ) : (

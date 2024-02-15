@@ -3,6 +3,11 @@ import pool from "@/libs/DBConnect";
 
 export async function PUT(req, { params }) {
   try {
+    const { _parsed } = req.cookies;
+    const token = _parsed.get("next-auth.session-token");
+
+    if (!token) return NextResponse.json({ message: "Unauthorized" });
+
     const id = parseInt(params?.id);
     const body = await req.json();
     const {

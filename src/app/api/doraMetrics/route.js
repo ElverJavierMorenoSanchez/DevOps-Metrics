@@ -3,6 +3,11 @@ import pool from "@/libs/DBConnect";
 
 export async function POST(req) {
   try {
+    const { _parsed } = req.cookies;
+    const token = _parsed.get("next-auth.session-token");
+
+    if (!token) return NextResponse.json({ message: "Unauthorized" });
+
     const body = await req.json();
     const { leadTime, mes, pais, valorMedicion, valorMedicionPorcentual } =
       body;
@@ -108,6 +113,11 @@ export async function POST(req) {
 }
 export async function GET(req) {
   try {
+    const { _parsed } = req.cookies;
+    const token = _parsed.get("next-auth.session-token");
+
+    if (!token) return NextResponse.json({ message: "Unauthorized" });
+
     const url = new URL(req.url);
 
     const mes = url.searchParams.get("mes");

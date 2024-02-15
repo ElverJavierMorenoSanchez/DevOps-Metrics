@@ -44,6 +44,15 @@ CREATE TABLE account (
   UNIQUE ("provider", "providerAccountId")
 );
 
+INSERT INTO user_hispam(
+"user_name",
+"pais",
+"email",
+"emailVerified",
+"rol",
+"hashedPassword"
+) VALUES ('admin', NULL, 'admin', NULL, 'administrador', '$2b$12$ItS0Xi6HdvKZHTbofmwfy.tkA8vW1wao8MgCpQ/rXY4eJX2bPc2W.');
+
 -- Permissions
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE devopsdata TO doraowner;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE user_hispam TO doraowner;

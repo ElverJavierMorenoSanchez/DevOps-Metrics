@@ -51,7 +51,7 @@ const ModalFormUser = ({ user, getData, type }) => {
       toast.success("Guardado exitoso");
       getData();
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response.data);
     }
   };
 
@@ -70,7 +70,7 @@ const ModalFormUser = ({ user, getData, type }) => {
           required={true}
         />
         <Input
-          label={"Correo"}
+          label={"Usuario"}
           id={"email"}
           register={register}
           errors={errors}

@@ -22,7 +22,7 @@ const TableLayout = ({ columns, data }) => {
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="px-6 py-3 text-left text-xs font-medium text-white uppercase"
+                    className="px-6 py-3 text-xs font-medium text-white uppercase text-center"
                   >
                     {header.isPlaceholder
                       ? null
@@ -41,7 +41,7 @@ const TableLayout = ({ columns, data }) => {
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
-                    className="px-6 py-3 text-left text-xs font-medium text-black uppercase "
+                    className="px-6 py-3 text-center text-xs font-medium text-black uppercase "
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
