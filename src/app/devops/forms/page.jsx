@@ -4,11 +4,13 @@ import { useState } from "react";
 import DoraForm from "./components/DoraForm";
 import { clsx } from "clsx";
 import GapsForm from "./components/GapsForm";
+import Header from "@/components/header/Header";
 
 const Forms = () => {
   const [doraForm, setDoraForm] = useState(true);
   return (
     <div className="w-full h-full px-10 py-10">
+      <Header />
       <div className="flex gap-4">
         <button
           onClick={() => {

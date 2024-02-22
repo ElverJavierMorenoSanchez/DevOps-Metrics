@@ -4,6 +4,7 @@ import { FaWpforms, FaChartBar } from "react-icons/fa6";
 import { MdOutlineSettings } from "react-icons/md";
 import AsideButton from "./AsideButton";
 import { getCurrentUser } from "@/actions/getCurrentUser";
+import LogoutButton from "./LogoutButton";
 
 const Aside = async () => {
   const user = await getCurrentUser();
@@ -26,12 +27,12 @@ const Aside = async () => {
           <AsideButton href={"/devops/dashboard"} icon={FaChartBar} />
         </nav>
       </div>
-
-      {user?.rol === "administrador" && (
-        <div className="flex justify-center py-5 border-t border-gray-600">
+      <div className="flex flex-col items-center justify-center py-2 border-t border-gray-600 gap-2">
+        {user?.rol === "administrador" && (
           <AsideButton href={"/settings"} icon={MdOutlineSettings} />
-        </div>
-      )}
+        )}
+        <LogoutButton />
+      </div>
     </aside>
   );
 };
