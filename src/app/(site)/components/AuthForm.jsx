@@ -65,6 +65,8 @@ const AuthForm = () => {
           redirect: false,
         });
 
+        console.log(callback);
+
         if (callback?.error) {
           toast.error("Credenciales incorrectas");
         }
