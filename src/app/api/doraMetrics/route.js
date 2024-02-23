@@ -19,6 +19,7 @@ export async function POST(req) {
       WHERE tipo_medicion = 'Desempeño DEVOPS'
         AND mes = $1
         AND pais = $2
+        AND anio = '2024'
     `,
       [parseInt(mes), pais]
     );
@@ -83,6 +84,7 @@ export async function POST(req) {
       WHERE tipo_medicion = 'Desempeño DEVOPS'
         AND mes = $1
         AND nombre_item_medir = 'Cantidad de Despliegues'
+        AND anio = '2024'
     `,
       [parseInt(mes)]
     );
@@ -113,6 +115,7 @@ const postClusterMetrics = async (mes, nombrePais, query) => {
       WHERE tipo_medicion = 'Desempeño DEVOPS'
         AND mes = $1
         AND pais = $2
+        AND anio = '2024'
     `,
       [parseInt(mes), nombrePais]
     );
@@ -208,6 +211,7 @@ export const putClusterMetrics = async (mes, nombrePais, query) => {
       WHERE tipo_medicion = 'Desempeño DEVOPS'
         AND mes = $1
         AND pais = $2
+        AND anio = '2024'
     `,
       [parseInt(mes), nombrePais]
     );
@@ -332,6 +336,7 @@ const getMetrics = async (pais, mes) => {
       WHERE tipo_medicion = 'Desempeño DEVOPS'
         AND mes = $1
         AND pais = $2
+        AND anio = '2024'
       ORDER BY id ASC
     `,
       [Number(mes), pais]

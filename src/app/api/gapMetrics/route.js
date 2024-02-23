@@ -89,6 +89,7 @@ const searhMetrics = async (pais, mes) => {
     WHERE tipo_medicion = 'Madurez DevOps'
       AND mes = $1
       AND pais = $2
+      AND anio = '2024'
     ORDER BY id ASC
     LIMIT 10
   `,

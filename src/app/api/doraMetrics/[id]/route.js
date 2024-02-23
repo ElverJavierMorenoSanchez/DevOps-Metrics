@@ -76,6 +76,7 @@ export async function PUT(req, { params }) {
       WHERE tipo_medicion = 'Desempeño DEVOPS'
         AND mes = $1
         AND nombre_item_medir = 'Cantidad de Despliegues'
+        AND anio = '2024'
     `,
       [parseInt(mes)]
     );
