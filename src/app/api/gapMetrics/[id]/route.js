@@ -1,4 +1,4 @@
-import pool from "@/libs/DBConnect";
+import pool, { schema } from "@/libs/DBConnect";
 import { NextResponse } from "next/server";
 
 export async function PUT(req, { params }) {
@@ -24,7 +24,7 @@ export async function PUT(req, { params }) {
 
     const result = await pool.query(
       `
-      UPDATE devOpsData
+      UPDATE ${schema}.devOpsData
       SET
         pais = $1,
         mes = $2,

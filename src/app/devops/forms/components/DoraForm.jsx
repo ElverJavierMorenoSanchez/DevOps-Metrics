@@ -9,6 +9,7 @@ import DoraTable from "./DoraTable";
 import getDoraMetrics from "@/actions/getDoraMetrics";
 import toast from "react-hot-toast";
 import { countries, months } from "@/helpers/AditionalData";
+import Loader from "@/components/Loader";
 
 const DoraForm = () => {
   const {
@@ -21,6 +22,7 @@ const DoraForm = () => {
   const [pais, setPais] = useState("");
   const [mes, setMes] = useState("");
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getData(mes, pais);
@@ -42,10 +44,13 @@ const DoraForm = () => {
     try {
       if (!mes || !pais) return toast.error("Selecciona un país y mes");
 
+      setLoading(true);
       const response = await axios.post("/api/doraMetrics", {
         pais,
         mes,
-        ...data,
+        valorMedicion: data.valorMedicion || 0,
+        leadTime: data.leadTime || 0,
+        valorMedicionPorcentual: data.valorMedicionPorcentual || 0,
       });
 
       getData(mes, pais);
@@ -53,14 +58,17 @@ const DoraForm = () => {
       setValue("leadTime", "");
       setValue("valorMedicionPorcentual", "");
       toast.success("Guardado exitoso");
+      setLoading(false);
     } catch (error) {
       console.log("🚀 ~ onSubmit ~ error:", error);
       toast.error(error.response.data.message);
+      setLoading(false);
     }
   };
 
   return (
     <>
+      {loading && <Loader />}
       <form
         className=" w-full flex flex-col gap-2"
         onSubmit={handleSubmit(onSubmit)}

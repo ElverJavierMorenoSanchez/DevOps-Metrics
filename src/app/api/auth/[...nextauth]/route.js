@@ -1,4 +1,4 @@
-import pool from "@/libs/DBConnect";
+import pool, { schema } from "@/libs/DBConnect";
 import bcrypt from "bcrypt";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -18,7 +18,7 @@ export const authOptions = {
 
         const query = `
         SELECT *
-        FROM "user_hispam"
+        FROM ${schema}.user_hispam
         WHERE "email" = $1;
         `;
 
@@ -30,14 +30,10 @@ export const authOptions = {
           throw new Error("Invalid Credentials");
         }
 
-        console.log(credentials.password, user.hashedPassword);
-
         const isCorrectPassword = await bcrypt.compare(
           credentials.password,
           user.hashedPassword
         );
-
-        console.log(isCorrectPassword);
 
         if (!isCorrectPassword) {
           throw new Error("Invalid Credentials");

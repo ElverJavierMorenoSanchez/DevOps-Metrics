@@ -7,6 +7,7 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { countries, months } from "@/helpers/AditionalData";
+import Loader from "@/components/Loader";
 
 const ModalFormDora = ({ metric, getData }) => {
   const { id, valor_medicion, valor_medicion_porcentual, nombre_item_medir } =
@@ -27,6 +28,7 @@ const ModalFormDora = ({ metric, getData }) => {
 
   const [pais, setPais] = useState(metric?.pais);
   const [mes, setMes] = useState(metric?.mes);
+  const [loading, setLoading] = useState(false);
 
   const handlePais = (event) => {
     setPais(event.target.value);
@@ -37,6 +39,8 @@ const ModalFormDora = ({ metric, getData }) => {
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
+
       const response = await axios.put(`/api/doraMetrics/${id}`, {
         pais,
         mes,
@@ -49,14 +53,17 @@ const ModalFormDora = ({ metric, getData }) => {
       setValue("valorMedicionPorcentual", "");
       toast.success("Guardado exitoso");
       getData(mes, pais);
+      setLoading(false);
     } catch (error) {
       console.log("🚀 ~ onSubmit ~ error:", error);
       toast.error(error.response.data.message);
+      setLoading(false);
     }
   };
 
   return (
     <>
+      {loading && <Loader />}
       <form
         className=" w-full flex flex-col gap-2"
         onSubmit={handleSubmit(onSubmit)}

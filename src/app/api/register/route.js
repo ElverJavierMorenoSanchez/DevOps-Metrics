@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import pool from "@/libs/DBConnect";
+import pool, { schema } from "@/libs/DBConnect";
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
@@ -10,7 +10,7 @@ export async function GET(req) {
     if (!token) return NextResponse.json({ message: "Unauthorized" });
 
     const query = `
-      SELECT id, user_name, email, pais, rol FROM "user_hispam"
+      SELECT id, user_name, email, pais, rol FROM ${schema}.user_hispam
     `;
 
     const result = await pool.query(query);
@@ -36,7 +36,7 @@ export async function POST(req) {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const query = `
-      INSERT INTO "user_hispam" ("email", "user_name", "hashedPassword", "pais", "rol")
+      INSERT INTO ${schema}.user_hispam ("email", "user_name", "hashedPassword", "pais", "rol")
       VALUES ($1, $2, $3, $4, $5)
       ;
     `;

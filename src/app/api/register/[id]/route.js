@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import pool from "@/libs/DBConnect";
+import pool, { schema } from "@/libs/DBConnect";
 import { NextResponse } from "next/server";
 
 export async function PUT(req, { params }) {
@@ -19,7 +19,7 @@ export async function PUT(req, { params }) {
       const hashedPassword = await bcrypt.hash(password, 12);
 
       const query = `
-      UPDATE "user_hispam" 
+      UPDATE ${schema}.user_hispam 
       SET 
         "email" = $1,
         "user_name" = $2,
@@ -35,7 +35,7 @@ export async function PUT(req, { params }) {
     }
 
     const query = `
-      UPDATE "user_hispam" 
+      UPDATE ${schema}.user_hispam 
       SET 
         "email" = $1,
         "user_name" = $2,
@@ -64,7 +64,7 @@ export async function DELETE(req, { params }) {
     const { id } = params;
 
     const query = `
-      DELETE FROM user_hispam
+      DELETE FROM ${schema}.user_hispam
       WHERE "id" = $1;
     `;
 

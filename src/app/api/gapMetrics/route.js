@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { gapsMetrics } from "@/helpers/AditionalData";
-import pool from "@/libs/DBConnect";
+import pool, { schema } from "@/libs/DBConnect";
 
 export async function POST(req) {
   try {
@@ -35,7 +35,7 @@ export async function POST(req) {
 
       const result = await pool.query(
         `
-        INSERT INTO devOpsData (tipo_medicion, pais, mes, nombre_item_medir, valor_medicion, valor_meta, avance_real, avance_estimado)
+        INSERT INTO ${schema}.devOpsData (tipo_medicion, pais, mes, nombre_item_medir, valor_medicion, valor_meta, avance_real, avance_estimado)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING *
       `,
@@ -85,7 +85,7 @@ const searhMetrics = async (pais, mes) => {
   const result = await pool.query(
     `
     SELECT *
-    FROM devOpsData
+    FROM ${schema}.devOpsData
     WHERE tipo_medicion = 'Madurez DevOps'
       AND mes = $1
       AND pais = $2

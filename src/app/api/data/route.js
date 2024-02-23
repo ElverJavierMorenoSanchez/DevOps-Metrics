@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import pool from "@/libs/DBConnect";
+import pool, { schema } from "@/libs/DBConnect";
 
 export async function POST() {
   try {
@@ -30,7 +30,7 @@ export async function GET(req, res) {
 }
 
 const searhMetrics = async () => {
-  const data = await pool.query("SELECT * FROM DevOpsData");
+  const data = await pool.query(`SELECT * FROM ${schema}.devopsdata`);
 
   return data.rows;
 };

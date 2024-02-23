@@ -1,6 +1,8 @@
 import { Pool } from "pg";
 
 const url = new URL(process.env.DATABASE_URL);
+const searchParams = url.searchParams;
+export const schema = searchParams.get("schema");
 
 const user = url.username;
 const password = url.password;

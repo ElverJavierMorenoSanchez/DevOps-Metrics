@@ -4,7 +4,7 @@ CREATE TABLE devopsdata (
     "tipo_medicion" TEXT NOT NULL,
     "pais" TEXT NOT NULL,
     "mes" INTEGER NOT NULL DEFAULT 1,
-    "anio" INTEGER NOT NULL DEFAULT 2024,
+    "anio" VARCHAR NOT NULL DEFAULT 2024,
     "nombre_item_medir" TEXT NOT NULL,
     "valor_medicion" DOUBLE PRECISION DEFAULT 0,
     "valor_meta" DOUBLE PRECISION DEFAULT 0,

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import pool from "@/libs/DBConnect";
+import pool, { schema } from "@/libs/DBConnect";
+import { putClusterMetrics, queries } from "../route";
 
 export async function PUT(req, { params }) {
   try {
@@ -31,7 +32,7 @@ export async function PUT(req, { params }) {
 
     const result = await pool.query(
       `
-      UPDATE devOpsData
+      UPDATE ${schema}.devOpsData
       SET
         pais = $1,
         mes = $2,
@@ -54,7 +55,7 @@ export async function PUT(req, { params }) {
     if (nombreItemMedir === "Cantidad de Despliegues") {
       const result = await pool.query(
         `
-        UPDATE devOpsData
+        UPDATE ${schema}.devOpsData
         SET
           pais = $1,
           mes = $2,
@@ -66,6 +67,23 @@ export async function PUT(req, { params }) {
       );
 
       newMetrics.secondaryMetric = result.rows[0];
+    }
+
+    const cntMetrics = await pool.query(
+      `
+      SELECT *
+      FROM ${schema}.devOpsData
+      WHERE tipo_medicion = 'Desempeño DEVOPS'
+        AND mes = $1
+        AND nombre_item_medir = 'Cantidad de Despliegues'
+    `,
+      [parseInt(mes)]
+    );
+
+    if (cntMetrics.rows.length > 6) {
+      await putClusterMetrics(mes, "HISPAM", queries.hispam);
+      await putClusterMetrics(mes, "Cluster 1", queries.cluster1);
+      await putClusterMetrics(mes, "Cluster 2", queries.cluster2);
     }
 
     return NextResponse.json(newMetrics);
