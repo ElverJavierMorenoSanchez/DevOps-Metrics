@@ -2,7 +2,7 @@ import { withAuth } from "next-auth/middleware";
 
 export default withAuth({
   pages: {
-    signIn: "/",
+    signIn: "http://20.90.147.49:3000",
   },
 });
 
