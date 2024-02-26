@@ -1,13 +1,13 @@
 import bcrypt from "bcrypt";
 import pool, { schema } from "@/libs/DBConnect";
 import { NextResponse } from "next/server";
+import getSession from "@/actions/getSession";
 
 export async function GET(req) {
   try {
-    const { _parsed } = req.cookies;
-    const token = _parsed.get("next-auth.session-token");
+    const session = await getSession();
 
-    if (!token) return NextResponse.json({ message: "Unauthorized" });
+    if (!session) return NextResponse.json({ message: "Unauthorized" });
 
     const query = `
       SELECT id, user_name, email, pais, rol FROM ${schema}.user_hispam
@@ -23,10 +23,9 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    const { _parsed } = req.cookies;
-    const token = _parsed.get("next-auth.session-token");
+    const session = await getSession();
 
-    if (!token) return NextResponse.json({ message: "Unauthorized" });
+    if (!session) return NextResponse.json({ message: "Unauthorized" });
 
     const { email, user_name, password, rol, pais } = await req.json();
 

@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import pool, { schema } from "@/libs/DBConnect";
+import getSession from "@/actions/getSession";
 
 export async function POST(req) {
   try {
-    const { _parsed } = req.cookies;
-    const token = _parsed.get("next-auth.session-token");
+    const session = await getSession();
 
-    if (!token) return NextResponse.json({ message: "Unauthorized" });
+    if (!session) return NextResponse.json({ message: "Unauthorized" });
 
     const body = await req.json();
     const { leadTime, mes, pais, valorMedicion, valorMedicionPorcentual } =
@@ -137,9 +137,12 @@ const postClusterMetrics = async (mes, nombrePais, query) => {
     const tasaExito = result.rows.filter(
       (metric) => metric.nombre_item_medir === "Tasa de Éxito"
     );
-    const freLibera = result.rows.filter(
+    /**
+     const freLibera = result.rows.filter(
       (metric) => metric.nombre_item_medir === "Frecuencia de Liberación"
-    );
+    ); 
+     
+     */
 
     const newMetric = {
       tipo_medicion: "Desempeño DEVOPS",
@@ -231,9 +234,12 @@ export const putClusterMetrics = async (mes, nombrePais, query) => {
     const tasaExito = result.rows.filter(
       (metric) => metric.nombre_item_medir === "Tasa de Éxito"
     );
-    const freLibera = result.rows.filter(
+    /**
+     const freLibera = result.rows.filter(
       (metric) => metric.nombre_item_medir === "Frecuencia de Liberación"
-    );
+    ); 
+     
+     */
 
     const newMetric = {
       tipo_medicion: "Desempeño DEVOPS",
@@ -305,10 +311,9 @@ export const putClusterMetrics = async (mes, nombrePais, query) => {
 
 export async function GET(req) {
   try {
-    const { _parsed } = req.cookies;
-    const token = _parsed.get("next-auth.session-token");
+    const session = await getSession();
 
-    if (!token) return NextResponse.json({ message: "Unauthorized" });
+    if (!session) return NextResponse.json({ message: "Unauthorized" });
 
     const url = new URL(req.url);
 

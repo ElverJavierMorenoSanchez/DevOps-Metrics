@@ -1,13 +1,13 @@
 import bcrypt from "bcrypt";
 import pool, { schema } from "@/libs/DBConnect";
 import { NextResponse } from "next/server";
+import getSession from "@/actions/getSession";
 
 export async function PUT(req, { params }) {
   try {
-    const { _parsed } = req.cookies;
-    const token = _parsed.get("next-auth.session-token");
+    const session = await getSession();
 
-    if (!token) return NextResponse.json({ message: "Unauthorized" });
+    if (!session) return NextResponse.json({ message: "Unauthorized" });
 
     const { id } = params;
     const { email, user_name, password, rol, pais } = await req.json();
@@ -56,10 +56,9 @@ export async function PUT(req, { params }) {
 
 export async function DELETE(req, { params }) {
   try {
-    const { _parsed } = req.cookies;
-    const token = _parsed.get("next-auth.session-token");
+    const session = await getSession();
 
-    if (!token) return NextResponse.json({ message: "Unauthorized" });
+    if (!session) return NextResponse.json({ message: "Unauthorized" });
 
     const { id } = params;
 

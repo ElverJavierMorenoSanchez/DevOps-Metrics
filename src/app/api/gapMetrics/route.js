@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { gapsMetrics } from "@/helpers/AditionalData";
 import pool, { schema } from "@/libs/DBConnect";
+import getSession from "@/actions/getSession";
 
 export async function POST(req) {
   try {
-    const { _parsed } = req.cookies;
-    const token = _parsed.get("next-auth.session-token");
+    const session = await getSession();
 
-    if (!token) return NextResponse.json({ message: "Unauthorized" });
+    if (!session) return NextResponse.json({ message: "Unauthorized" });
 
     const body = await req.json();
     const { mes, pais } = body;

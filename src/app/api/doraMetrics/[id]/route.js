@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import pool, { schema } from "@/libs/DBConnect";
 import { putClusterMetrics, queries } from "../route";
+import getSession from "@/actions/getSession";
 
 export async function PUT(req, { params }) {
   try {
-    const { _parsed } = req.cookies;
-    const token = _parsed.get("next-auth.session-token");
+    const session = await getSession();
 
-    if (!token) return NextResponse.json({ message: "Unauthorized" });
+    if (!session) return NextResponse.json({ message: "Unauthorized" });
 
     const id = parseInt(params?.id);
     const body = await req.json();

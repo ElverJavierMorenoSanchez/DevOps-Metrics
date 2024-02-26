@@ -1,4 +1,4 @@
-import pool from "@/libs/DBConnect";
+import pool, { schema } from "@/libs/DBConnect";
 import getSession from "./getSession";
 
 export const getCurrentUser = async () => {
@@ -8,7 +8,7 @@ export const getCurrentUser = async () => {
     if (!session?.user?.email) return null;
 
     const currentUser = await pool.query(
-      `SELECT user_name, rol, email FROM user_hispam WHERE email = $1`,
+      `SELECT user_name, rol, email FROM ${schema}.user_hispam WHERE email = $1`,
       [session?.user?.email]
     );
 
