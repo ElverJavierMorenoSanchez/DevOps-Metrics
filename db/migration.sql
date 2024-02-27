@@ -8,14 +8,14 @@ CREATE TABLE devopsdata (
     "nombre_item_medir" TEXT NOT NULL,
     "valor_medicion" DOUBLE PRECISION DEFAULT 0,
     "valor_meta" DOUBLE PRECISION DEFAULT 0,
-    "avance_real" INTEGER DEFAULT 0,
-    "avance_estimado" INTEGER DEFAULT 0,
+    "avance_real" DOUBLE  PRECISION DEFAULT 0,
+    "avance_estimado" DOUBLE PRECISION DEFAULT 0,
     "valor_medicion_porcentual" DOUBLE PRECISION DEFAULT 0,
     "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
 );
 
-drop table user_hispam;
-drop table account;
+--drop table user_hispam;
+--drop table account;
 
 CREATE TABLE user_hispam (
   "id" VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),

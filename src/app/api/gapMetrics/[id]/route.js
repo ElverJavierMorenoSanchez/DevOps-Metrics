@@ -40,8 +40,8 @@ export async function PUT(req, { params }) {
         newMetric.mes,
         newMetric.valor_medicion,
         newMetric.valor_meta,
-        newMetric.avance_real,
-        newMetric.avance_estimado,
+        newMetric.avance_real / 100,
+        newMetric.avance_estimado / 100,
         parseInt(id),
       ]
     );

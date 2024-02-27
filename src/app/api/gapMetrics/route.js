@@ -46,8 +46,8 @@ export async function POST(req) {
           newMetric.nombre_item_medir,
           newMetric.valor_medicion,
           newMetric.valor_meta,
-          newMetric.avance_real,
-          newMetric.avance_estimado,
+          newMetric.avance_real / 100,
+          newMetric.avance_estimado / 100,
         ]
       );
 
