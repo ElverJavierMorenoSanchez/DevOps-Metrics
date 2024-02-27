@@ -10,30 +10,33 @@ const Aside = async () => {
   const user = await getCurrentUser();
 
   return (
-    <aside
-      id="sidebar"
-      className="absolute inset-y-0 left-0 z-30 flex flex-col w-[4.5rem] min-h-screen space-y-6 overflow-y-auto text-gray-100 transition duration-200 transform bg-gray-800 lg:translate-x-0 lg:relative lg:inset-0"
-    >
-      <div className="flex flex-col items-center flex-1 space-y-6">
-        <Link
-          href="#"
-          className="border-b-2 flex items-center justify-center w-full p-5 lg:p-0 lg:h-20 font-bold text-white truncate whitespace-nowrap"
-        >
-          <Image alt="logo" src="/logo-hispam.jpg" width={100} height={100} />
-        </Link>
+    <>
+      <div className="relative inset-y-0 left-0 z-30 flex flex-col w-[4.5rem] h-screen space-y-6 overflow-y-auto"></div>
+      <aside
+        id="sidebar"
+        className="fixed inset-y-0 left-0 z-30 flex flex-col w-[4.5rem] h-screen space-y-6 overflow-y-auto text-gray-100 transition duration-200 transform bg-gray-800 "
+      >
+        <div className="flex flex-col items-center flex-1 space-y-6">
+          <Link
+            href="#"
+            className="border-b-2 flex items-center justify-center w-full p-5 lg:p-0 lg:h-20 font-bold text-white truncate whitespace-nowrap"
+          >
+            <Image alt="logo" src="/logo-hispam.jpg" width={100} height={100} />
+          </Link>
 
-        <nav className="flex flex-col items-center space-y-6">
-          <AsideButton href={"/devops/forms"} icon={FaWpforms} />
-          <AsideButton href={"/devops/dashboard"} icon={FaChartBar} />
-        </nav>
-      </div>
-      <div className="flex flex-col items-center justify-center py-2 border-t border-gray-600 gap-2">
-        {user?.rol === "administrador" && (
-          <AsideButton href={"/settings"} icon={MdOutlineSettings} />
-        )}
-        <LogoutButton />
-      </div>
-    </aside>
+          <nav className="flex flex-col items-center space-y-6">
+            <AsideButton href={"/devops/forms"} icon={FaWpforms} />
+            <AsideButton href={"/devops/dashboard"} icon={FaChartBar} />
+          </nav>
+        </div>
+        <div className="flex flex-col items-center justify-center py-2 border-t border-gray-600 gap-2">
+          {user?.rol === "administrador" && (
+            <AsideButton href={"/settings"} icon={MdOutlineSettings} />
+          )}
+          <LogoutButton />
+        </div>
+      </aside>
+    </>
   );
 };
 

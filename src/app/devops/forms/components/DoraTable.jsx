@@ -13,6 +13,7 @@ const DoraTable = ({ data, getData }) => {
     {
       accessorKey: "valor_medicion_porcentual",
       header: "Valor Medicion %",
+      cell: (row) => row?.row?.original.valor_medicion_porcentual * 100 + "%",
     },
     {
       accessorKey: "id",

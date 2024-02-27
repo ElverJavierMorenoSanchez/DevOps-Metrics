@@ -64,7 +64,7 @@ export async function POST(req) {
       newMetric.mes,
       "Tasa de Éxito",
       0,
-      parseFloat(valorMedicionPorcentual),
+      parseFloat(valorMedicionPorcentual) / 100,
     ]);
     await pool.query(queries.postData, [
       newMetric.tipo_medicion,

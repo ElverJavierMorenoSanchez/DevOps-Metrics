@@ -5,7 +5,7 @@ import { useCallback, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { signIn, useSession } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -65,13 +65,21 @@ const AuthForm = () => {
           redirect: false,
         });
 
-        console.log(callback);
-
         if (callback?.error) {
           toast.error("Credenciales incorrectas");
         }
 
         if (callback?.ok) {
+          const session = await getSession();
+
+          if (!session?.user?.email) return;
+
+          const currentUser = await axios.get(
+            `/api/register/${session?.user?.email}`
+          );
+
+          localStorage.setItem("user", JSON.stringify(currentUser.data));
+
           toast.success("Iniciaste sesión!");
           router.push("/devops/forms");
         }

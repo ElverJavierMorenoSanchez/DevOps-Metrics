@@ -10,6 +10,7 @@ import getDoraMetrics from "@/actions/getDoraMetrics";
 import toast from "react-hot-toast";
 import { countries, months } from "@/helpers/AditionalData";
 import Loader from "@/components/Loader";
+import { validatePermission } from "@/helpers/Validations";
 
 const DoraForm = () => {
   const {
@@ -29,6 +30,7 @@ const DoraForm = () => {
   }, [mes, pais]);
 
   const getData = async (_mes, _pais) => {
+    if (!_mes || !_pais) return;
     const _data = await getDoraMetrics(_mes, _pais);
     setData(_data);
   };
@@ -42,7 +44,9 @@ const DoraForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      if (!mes || !pais) return toast.error("Selecciona un país y mes");
+      const validate = validatePermission(pais, mes);
+
+      if (!validate) return;
 
       setLoading(true);
       const response = await axios.post("/api/doraMetrics", {
@@ -61,7 +65,7 @@ const DoraForm = () => {
       setLoading(false);
     } catch (error) {
       console.log("🚀 ~ onSubmit ~ error:", error);
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message);
       setLoading(false);
     }
   };

@@ -75,3 +75,23 @@ export async function DELETE(req, { params }) {
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
+
+export async function GET(req, { params }) {
+  try {
+    const session = await getSession();
+
+    if (!session) return NextResponse.json({ message: "Unauthorized" });
+
+    const { id } = params;
+
+    const currentUser = await pool.query(
+      `SELECT user_name, rol, pais FROM ${schema}.user_hispam WHERE email = $1`,
+      [id]
+    );
+
+    return NextResponse.json(currentUser.rows[0]);
+  } catch (error) {
+    console.log(error, "REGISTRATION ERROR");
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}

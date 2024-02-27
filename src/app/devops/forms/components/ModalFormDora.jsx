@@ -8,6 +8,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { countries, months } from "@/helpers/AditionalData";
 import Loader from "@/components/Loader";
+import { validatePermission } from "@/helpers/Validations";
 
 const ModalFormDora = ({ metric, getData }) => {
   const { id, valor_medicion, valor_medicion_porcentual, nombre_item_medir } =
@@ -21,7 +22,7 @@ const ModalFormDora = ({ metric, getData }) => {
   } = useForm({
     defaultValues: {
       valorMedicion: valor_medicion,
-      valorMedicionPorcentual: valor_medicion_porcentual,
+      valorMedicionPorcentual: valor_medicion_porcentual * 100,
       leadTime: valor_medicion,
     },
   });
@@ -39,6 +40,10 @@ const ModalFormDora = ({ metric, getData }) => {
 
   const onSubmit = async (data) => {
     try {
+      const validate = validatePermission(pais, mes);
+
+      if (!validate) return;
+
       setLoading(true);
 
       const response = await axios.put(`/api/doraMetrics/${id}`, {
@@ -56,7 +61,7 @@ const ModalFormDora = ({ metric, getData }) => {
       setLoading(false);
     } catch (error) {
       console.log("🚀 ~ onSubmit ~ error:", error);
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message);
       setLoading(false);
     }
   };
@@ -87,7 +92,7 @@ const ModalFormDora = ({ metric, getData }) => {
           defaultValue={mes}
           disabled={true}
         />
-        {nombre_item_medir === "Cantidad de Despliegues" && (
+        {nombre_item_medir.trim() === "Cantidad de Despliegues" && (
           <InputForm
             id="valorMedicion"
             label={"Cant. Despliegues:"}
@@ -97,7 +102,7 @@ const ModalFormDora = ({ metric, getData }) => {
           />
         )}
 
-        {nombre_item_medir === "Lead Time DevOps" && (
+        {nombre_item_medir.trim() === "Lead Time DevOps" && (
           <InputForm
             id="leadTime"
             label={"Lead Time:"}
@@ -107,7 +112,7 @@ const ModalFormDora = ({ metric, getData }) => {
           />
         )}
 
-        {nombre_item_medir === "Tasa de Éxito" && (
+        {nombre_item_medir.trim() === "Tasa de Éxito" && (
           <InputForm
             id="valorMedicionPorcentual"
             label={"Tasa De Éxito:"}

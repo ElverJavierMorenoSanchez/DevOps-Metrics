@@ -27,7 +27,7 @@ export async function PUT(req, { params }) {
         nombreItemMedir === "Cantidad de Despliegues"
           ? parseFloat(valorMedicion)
           : parseFloat(leadTime),
-      valor_medicion_porcentual: parseFloat(valorMedicionPorcentual),
+      valor_medicion_porcentual: parseFloat(valorMedicionPorcentual) / 100,
     };
 
     const result = await pool.query(

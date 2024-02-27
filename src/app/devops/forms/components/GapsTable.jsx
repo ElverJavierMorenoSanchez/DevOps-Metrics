@@ -14,10 +14,12 @@ const GapsTable = ({ data, getData }) => {
     {
       accessorKey: "avance_real",
       header: "%avance Real del plan de desarrolloValor Medición",
+      cell: (row) => row?.row?.original.avance_real * 100 + "%",
     },
     {
       accessorKey: "avance_estimado",
       header: "%avance Estimado del plan de desarrollo",
+      cell: (row) => row?.row?.original.avance_estimado * 100 + "%",
     },
 
     {

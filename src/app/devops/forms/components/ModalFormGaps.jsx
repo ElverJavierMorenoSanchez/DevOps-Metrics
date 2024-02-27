@@ -8,6 +8,7 @@ import { useState } from "react";
 import { countries, months } from "@/helpers/AditionalData";
 import toast from "react-hot-toast";
 import Loader from "@/components/Loader";
+import { validatePermission } from "@/helpers/Validations";
 
 const ModalFormGaps = ({ metric, getData }) => {
   const {
@@ -29,7 +30,12 @@ const ModalFormGaps = ({ metric, getData }) => {
     avance_real,
   } = metric;
 
-  const values = [valor_medicion, valor_meta, avance_real, avance_estimado];
+  const values = [
+    valor_medicion,
+    valor_meta,
+    avance_real * 100,
+    avance_estimado * 100,
+  ];
 
   const handlePais = (event) => {
     setPais(event.target.value);
@@ -40,6 +46,9 @@ const ModalFormGaps = ({ metric, getData }) => {
 
   const onSubmit = async (data) => {
     try {
+      const validate = validatePermission(pais, mes);
+
+      if (!validate) return;
       setLoading(true);
       const response = await axios.put(`/api/gapMetrics/${id}`, {
         pais,
@@ -51,7 +60,7 @@ const ModalFormGaps = ({ metric, getData }) => {
       getData(mes, pais);
       setLoading(false);
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message);
       setLoading(false);
     }
   };
@@ -99,7 +108,7 @@ const ModalFormGaps = ({ metric, getData }) => {
               </div>
             </div>
           </div>
-          {nombre_item_medir === "GAP Configuration Management" && (
+          {nombre_item_medir.trim() === "GAP Configuration Management" && (
             <InputGroup
               label={"GAP Configuration Management:"}
               id={"confManage"}
@@ -108,7 +117,7 @@ const ModalFormGaps = ({ metric, getData }) => {
               values={values}
             />
           )}
-          {nombre_item_medir === "GAP Build Management" && (
+          {nombre_item_medir.trim() === "GAP Build Management" && (
             <InputGroup
               label={"GAP Build Management:"}
               id={"buildManage"}
@@ -118,7 +127,7 @@ const ModalFormGaps = ({ metric, getData }) => {
             />
           )}
 
-          {nombre_item_medir === "GAP Testing and QA" && (
+          {nombre_item_medir.trim() === "GAP Testing and QA" && (
             <InputGroup
               label={"GAP Testing and QA:"}
               id={"testingQA"}
@@ -127,7 +136,7 @@ const ModalFormGaps = ({ metric, getData }) => {
               values={values}
             />
           )}
-          {nombre_item_medir === "GAP Deployment  automation" && (
+          {nombre_item_medir.trim() === "GAP Deployment  automation" && (
             <InputGroup
               label={"GAP Deployment  automation:"}
               id={"deployAuto"}
@@ -136,7 +145,7 @@ const ModalFormGaps = ({ metric, getData }) => {
               values={values}
             />
           )}
-          {nombre_item_medir === "GAP Release Management" && (
+          {nombre_item_medir.trim() === "GAP Release Management" && (
             <InputGroup
               label={"GAP Release Management:"}
               id={"releaseManage"}
@@ -146,7 +155,7 @@ const ModalFormGaps = ({ metric, getData }) => {
             />
           )}
 
-          {nombre_item_medir === "GAP Environmet provisioning" && (
+          {nombre_item_medir.trim() === "GAP Environmet provisioning" && (
             <InputGroup
               label={"GAP Environmet provisioning:"}
               id={"environmentProvisoning"}
@@ -155,7 +164,7 @@ const ModalFormGaps = ({ metric, getData }) => {
               values={values}
             />
           )}
-          {nombre_item_medir === "GAP Data Management" && (
+          {nombre_item_medir.trim() === "GAP Data Management" && (
             <InputGroup
               label={"GAP Data Management:"}
               id={"dataManage"}
@@ -164,7 +173,7 @@ const ModalFormGaps = ({ metric, getData }) => {
               values={values}
             />
           )}
-          {nombre_item_medir === "GAP Monitoring" && (
+          {nombre_item_medir.trim() === "GAP Monitoring" && (
             <InputGroup
               label={"GAP Monitoring:"}
               id={"monitoring"}
@@ -173,7 +182,7 @@ const ModalFormGaps = ({ metric, getData }) => {
               values={values}
             />
           )}
-          {nombre_item_medir === "GAP Security" && (
+          {nombre_item_medir.trim() === "GAP Security" && (
             <InputGroup
               label={"GAP Security:"}
               id={"security"}
@@ -182,7 +191,7 @@ const ModalFormGaps = ({ metric, getData }) => {
               values={values}
             />
           )}
-          {nombre_item_medir === "GAP Teams Organization" && (
+          {nombre_item_medir.trim() === "GAP Teams Organization" && (
             <InputGroup
               label={"GAP Teams Organization:"}
               id={"teamsOrganization"}

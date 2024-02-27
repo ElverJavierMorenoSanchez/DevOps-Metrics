@@ -12,6 +12,7 @@ import { countries, months } from "@/helpers/AditionalData";
 import SwitchButton from "@/components/Buttons/SwitchButton";
 import { FaEdit, FaWpforms } from "react-icons/fa";
 import Loader from "@/components/Loader";
+import { validatePermission } from "@/helpers/Validations";
 
 const GapsForm = () => {
   const {
@@ -32,6 +33,7 @@ const GapsForm = () => {
   }, [mes, pais]);
 
   const getData = async (_mes, _pais) => {
+    if (!_mes || !_pais) return;
     const _data = await getGapsMetrics(_mes, _pais);
     setData(_data);
   };
@@ -49,9 +51,11 @@ const GapsForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      if (!mes || !pais) return toast.error("Selecciona un país y mes");
-      setLoading(true);
+      const validate = validatePermission(pais, mes);
 
+      if (!validate) return;
+
+      setLoading(true);
       const response = await axios.post("/api/gapMetrics", {
         pais,
         mes,

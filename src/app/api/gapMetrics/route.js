@@ -17,7 +17,7 @@ export async function POST(req) {
 
     if (_metrics.length > 0)
       return NextResponse.json(
-        { message: "El elemento ya existe" },
+        { message: "Ya existe una métrica para este mes y país" },
         { status: 302 }
       );
 
@@ -51,7 +51,7 @@ export async function POST(req) {
         ]
       );
 
-      newMetrics.push(result.rows[0]);
+      newMetrics.push(result);
     }
 
     return NextResponse.json(newMetrics);
@@ -63,10 +63,9 @@ export async function POST(req) {
 
 export async function GET(req) {
   try {
-    const { _parsed } = req.cookies;
-    const token = _parsed.get("next-auth.session-token");
+    const session = await getSession();
 
-    if (!token) return NextResponse.json({ message: "Unauthorized" });
+    if (!session) return NextResponse.json({ message: "Unauthorized" });
 
     const url = new URL(req.url);
 

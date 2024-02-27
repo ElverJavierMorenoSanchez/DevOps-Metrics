@@ -6,6 +6,7 @@ import UserTable from "./components/UserTable";
 import getUsers from "@/actions/getUsers";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Button from "./components/Button";
 
 const Settings = () => {
   const [doraForm, setDoraForm] = useState(true);
@@ -34,6 +35,15 @@ const Settings = () => {
 
   return (
     <div className="w-full h-full px-10 py-10">
+      <Button
+        onClick={async () => {
+          const data = await axios.delete(`/api/data`);
+
+          console.log("🚀 ~ onClick={ ~ data:", data);
+        }}
+      >
+        Hello
+      </Button>
       <div className="flex gap-4">
         <button
           onClick={() => {
