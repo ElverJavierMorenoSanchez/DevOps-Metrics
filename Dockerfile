@@ -3,7 +3,6 @@ FROM node:18-alpine AS base
 ENV NEXT_SHARP_PATH /tmp/node_modules/sharp
 ENV DATABASE_URL postgresql://user:password@0.0.0.0:5432/database
 ENV NEXTAUTH_SECRET NEXTAUTH_SECRET
-ENV NEXTAUTH_URL http://20.90.147.49:3000/
 
 FROM base AS deps
 
