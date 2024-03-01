@@ -32,7 +32,7 @@ export async function GET(req, res) {
   } catch (error) {
     console.log(error);
     return NextResponse.json({
-      error: "error",
+      error,
     });
   }
 }
@@ -43,7 +43,7 @@ export async function DELETE(req, res) {
 
     if (!session) return NextResponse.json({ message: "Unauthorized" });
 
-    const query = `DELETE FROM ${schema}.devOpsData WHERE anio = '2024'`;
+    const query = `DELETE FROM ${schema}.devopsdata WHERE anio = '2024'`;
 
     const data = await pool.query(query);
 
@@ -51,7 +51,7 @@ export async function DELETE(req, res) {
   } catch (error) {
     console.log(error);
     return NextResponse.json({
-      error: "error",
+      error,
     });
   }
 }
@@ -64,7 +64,7 @@ const searhMetrics = async () => {
 
 const insertMetrics = async (data) => {
   const query = `
-    INSERT INTO ${schema}.devOpsData (tipo_medicion, pais, mes, anio, nombre_item_medir, valor_medicion, valor_meta, avance_real, avance_estimado, valor_medicion_porcentual) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+    INSERT INTO ${schema}.devopsdata (tipo_medicion, pais, mes, anio, nombre_item_medir, valor_medicion, valor_meta, avance_real, avance_estimado, valor_medicion_porcentual) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     RETURNING *
   `;
 

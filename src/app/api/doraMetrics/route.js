@@ -15,7 +15,7 @@ export async function POST(req) {
     const result = await pool.query(
       `
       SELECT *
-      FROM ${schema}.devOpsData
+      FROM ${schema}.devopsdata
       WHERE tipo_medicion = 'Desempeño DEVOPS'
         AND mes = $1
         AND pais = $2
@@ -39,9 +39,6 @@ export async function POST(req) {
       valor_medicion: parseFloat(valorMedicion),
     };
 
-    // Crear nuevas métricas utilizando una transacción
-    await pool.query("BEGIN");
-
     await pool.query(queries.postData, [
       newMetric.tipo_medicion,
       newMetric.pais,
@@ -50,6 +47,7 @@ export async function POST(req) {
       newMetric.valor_medicion,
       0,
     ]);
+
     await pool.query(queries.postData, [
       newMetric.tipo_medicion,
       newMetric.pais,
@@ -75,12 +73,10 @@ export async function POST(req) {
       0,
     ]);
 
-    await pool.query("COMMIT");
-
     const cntMetrics = await pool.query(
       `
       SELECT *
-      FROM ${schema}.devOpsData
+      FROM ${schema}.devopsdata
       WHERE tipo_medicion = 'Desempeño DEVOPS'
         AND mes = $1
         AND nombre_item_medir = 'Cantidad de Despliegues'
@@ -97,10 +93,9 @@ export async function POST(req) {
 
     return NextResponse.json({ message: "Métricas creadas" }, { status: 201 });
   } catch (error) {
-    await pool.query("ROLLBACK");
     console.log("Error creating metrics", error);
     return NextResponse.json(
-      { error: "Error creating metrics" },
+      { error: "Error creating metrics", problem: error },
       { status: 500 }
     );
   }
@@ -111,7 +106,7 @@ const postClusterMetrics = async (mes, nombrePais, query) => {
     const pais = await pool.query(
       `
       SELECT *
-      FROM ${schema}.devOpsData
+      FROM ${schema}.devopsdata
       WHERE tipo_medicion = 'Desempeño DEVOPS'
         AND mes = $1
         AND pais = $2
@@ -210,7 +205,7 @@ export const putClusterMetrics = async (mes, nombrePais, query) => {
     const pais = await pool.query(
       `
       SELECT *
-      FROM ${schema}.devOpsData
+      FROM ${schema}.devopsdata
       WHERE tipo_medicion = 'Desempeño DEVOPS'
         AND mes = $1
         AND pais = $2
@@ -326,7 +321,7 @@ export async function GET(req) {
   } catch (error) {
     console.log("Error getting metrics", error);
     return NextResponse.json(
-      { error: "Error getting metrics" },
+      { error: "Error getting metrics", problem: error },
       { status: 500 }
     );
   }
@@ -337,7 +332,7 @@ const getMetrics = async (pais, mes) => {
     const result = await pool.query(
       `
       SELECT *
-      FROM ${schema}.devOpsData
+      FROM ${schema}.devopsdata
       WHERE tipo_medicion = 'Desempeño DEVOPS'
         AND mes = $1
         AND pais = $2
@@ -350,18 +345,18 @@ const getMetrics = async (pais, mes) => {
     return result.rows;
   } catch (error) {
     console.log("🚀 ~ getMetrics ~ error:", error);
-    return [];
+    return error;
   }
 };
 
 export const queries = {
   postData: ` 
-      INSERT INTO ${schema}.devOpsData (tipo_medicion, pais, mes, nombre_item_medir, valor_medicion, valor_medicion_porcentual)
+      INSERT INTO ${schema}.devopsdata (tipo_medicion, pais, mes, nombre_item_medir, valor_medicion, valor_medicion_porcentual)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *`,
   cluster1: `
       SELECT *
-      FROM ${schema}.devOpsData
+      FROM ${schema}.devopsdata
       WHERE tipo_medicion = 'Desempeño DEVOPS'
         AND mes = $1
         AND anio = '2024'
@@ -375,7 +370,7 @@ export const queries = {
       ORDER BY id ASC`,
   cluster2: `
       SELECT *
-      FROM ${schema}.devOpsData
+      FROM ${schema}.devopsdata
       WHERE tipo_medicion = 'Desempeño DEVOPS'
         AND mes = $1
         AND anio = '2024' 
@@ -390,7 +385,7 @@ export const queries = {
   `,
   hispam: `
       SELECT *
-      FROM ${schema}.devOpsData
+      FROM ${schema}.devopsdata
       WHERE tipo_medicion = 'Desempeño DEVOPS'
         AND mes = $1
         AND anio = '2024'
@@ -400,7 +395,7 @@ export const queries = {
       ORDER BY id ASC
   `,
   updateData: `
-      UPDATE ${schema}.devOpsData 
+      UPDATE ${schema}.devopsdata 
       SET 
       tipo_medicion=$1, 
       pais=$2, 
@@ -411,7 +406,7 @@ export const queries = {
       WHERE id = $6
   `,
   updateData2: `
-      UPDATE ${schema}.devOpsData 
+      UPDATE ${schema}.devopsdata 
       SET 
       tipo_medicion=$1, 
       pais=$2, 

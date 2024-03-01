@@ -1,6 +1,10 @@
 import pool, { schema } from "@/libs/DBConnect";
 import getSession from "./getSession";
 
+/**
+ * Retrieves the current user from the database based on the session user's email.
+ * @returns {Promise<Object|null>} The current user object if found, otherwise null.
+ */
 export const getCurrentUser = async () => {
   try {
     const session = await getSession();

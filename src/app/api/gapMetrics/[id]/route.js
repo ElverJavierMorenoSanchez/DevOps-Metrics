@@ -24,7 +24,7 @@ export async function PUT(req, { params }) {
 
     const result = await pool.query(
       `
-      UPDATE ${schema}.devOpsData
+      UPDATE ${schema}.devopsdata
       SET
         pais = $1,
         mes = $2,

@@ -1,16 +1,21 @@
 "use client";
 import Button from "@/components/Button";
 import Input from "@/components/inputs/Input";
-import { useCallback, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { toast } from "react-hot-toast";
-import { getSession, signIn, useSession } from "next-auth/react";
+import { getSession, signIn, useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { getUser } from "@/actions/getUser";
 
+/**
+ * AuthForm component for handling user authentication.
+ *
+ * @component
+ * @returns {JSX.Element} AuthForm component
+ */
 const AuthForm = () => {
-  const [variant, setVariant] = useState("LOGIN");
   const [isLoading, setIsLoading] = useState(false);
   const session = useSession();
   const router = useRouter();
@@ -32,78 +37,46 @@ const AuthForm = () => {
     }
   }, [session?.status, router]);
 
-  const toggleVariant = useCallback(() => {
-    if (variant === "LOGIN") {
-      setVariant("REGISTER");
-    } else {
-      setVariant("LOGIN");
-    }
-  }, [variant]);
-
+  /**
+   * Handles the form submission.
+   * @param {Object} data - The form data.
+   * @returns {Promise<void>} - A promise that resolves when the submission is complete.
+   */
   const onSubmit = async (data) => {
     setIsLoading(true);
 
-    if (variant === "REGISTER") {
-      try {
-        await axios.post("/api/register", data);
-        const callback = await signIn("credentials", data);
-
-        if (callback?.error) toast.error("Algo salió mal!");
-
-        if (callback?.ok) {
-          toast.success("Account created");
-          router.push("/devops/forms");
-        }
-      } catch (error) {
-        toast.error("Algo salió mal!");
-      }
-    }
-    if (variant === "LOGIN") {
-      try {
-        const callback = await signIn("credentials", {
-          ...data,
-          redirect: false,
-        });
-
-        if (callback?.error) {
-          toast.error("Credenciales incorrectas");
-        }
-
-        if (callback?.ok) {
-          const session = await getSession();
-
-          if (!session?.user?.email) return;
-
-          const currentUser = await axios.get(
-            `/api/register/${session?.user?.email}`
-          );
-
-          localStorage.setItem("user", JSON.stringify(currentUser.data));
-
-          toast.success("Iniciaste sesión!");
-          router.push("/devops/forms");
-        }
-      } catch (error) {
-        toast.error("Algo salió mal!");
-      }
-    }
-    setIsLoading(false);
-  };
-
-  const socialAction = async (action) => {
-    setIsLoading(true);
     try {
-      const callback = await signIn(action, { redirect: false });
+      const callback = await signIn("credentials", {
+        ...data,
+        redirect: false,
+      });
+
       if (callback?.error) {
-        toast.error("Invalid credentials");
+        toast.error("Credenciales incorrectas");
       }
 
       if (callback?.ok) {
-        toast.success("Logged in");
+        const session = await getSession();
+
+        if (!session?.user?.email) return;
+
+        const currentUser = await getUser(session?.user?.email);
+
+        if (!currentUser) {
+          toast.error("Algo salió mal!");
+          signOut();
+          return;
+        }
+
+        localStorage.setItem("user", JSON.stringify(currentUser));
+
+        toast.success("Iniciaste sesión!");
+        router.push("/devops/forms");
       }
     } catch (error) {
-      toast.error("Something wrong, try later");
+      toast.error("Algo salió mal!");
     }
+
     setIsLoading(false);
   };
 
@@ -118,16 +91,6 @@ const AuthForm = () => {
           className="rounded-full"
         />
         <form className="w-full space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          {variant === "REGISTER" && (
-            <Input
-              id="name"
-              label="Name"
-              type="text"
-              register={register}
-              errors={errors}
-              disabled={isLoading}
-            />
-          )}
           <Input
             id="email"
             label="Usuario"
@@ -146,7 +109,7 @@ const AuthForm = () => {
           />
           <div>
             <Button disabled={isLoading} fullWidth type="submit">
-              {variant === "LOGIN" ? "Iniciar Sesión" : "Register"}
+              Iniciar Sesión
             </Button>
           </div>
         </form>

@@ -32,6 +32,7 @@ const DoraForm = () => {
   const getData = async (_mes, _pais) => {
     if (!_mes || !_pais) return;
     const _data = await getDoraMetrics(_mes, _pais);
+
     setData(_data);
   };
 
@@ -49,7 +50,7 @@ const DoraForm = () => {
       if (!validate) return;
 
       setLoading(true);
-      const response = await axios.post("/api/doraMetrics", {
+      await axios.post("/api/doraMetrics", {
         pais,
         mes,
         valorMedicion: data.valorMedicion || 0,

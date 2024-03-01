@@ -1,6 +1,10 @@
 import Image from "next/image";
 import AuthForm from "./components/AuthForm";
 
+/**
+ * Renders the Home page component.
+ * @returns {JSX.Element} The rendered Home page.
+ */
 export default function Home() {
   return (
     <section className="bg-white">

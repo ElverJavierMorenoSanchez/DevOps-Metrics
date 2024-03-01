@@ -32,7 +32,7 @@ export async function PUT(req, { params }) {
 
     const result = await pool.query(
       `
-      UPDATE ${schema}.devOpsData
+      UPDATE ${schema}.devopsdata
       SET
         pais = $1,
         mes = $2,
@@ -55,7 +55,7 @@ export async function PUT(req, { params }) {
     if (nombreItemMedir === "Cantidad de Despliegues") {
       const result = await pool.query(
         `
-        UPDATE ${schema}.devOpsData
+        UPDATE ${schema}.devopsdata
         SET
           pais = $1,
           mes = $2,
@@ -72,7 +72,7 @@ export async function PUT(req, { params }) {
     const cntMetrics = await pool.query(
       `
       SELECT *
-      FROM ${schema}.devOpsData
+      FROM ${schema}.devopsdata
       WHERE tipo_medicion = 'Desempeño DEVOPS'
         AND mes = $1
         AND nombre_item_medir = 'Cantidad de Despliegues'
